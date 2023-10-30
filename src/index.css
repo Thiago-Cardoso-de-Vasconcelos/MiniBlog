@@ -114,3 +114,20 @@ button[disabled] {
   padding: 5px;
   border-radius: 5px;
 }
+
+  /*scrollbar */
+body::-webkit-scrollbar {
+  width: 12px;              
+}
+
+body::-webkit-scrollbar-track {
+  background: rgb(238, 237, 237);        
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: rgb(44, 43, 43);    
+  border-radius: 20px;       
+  border: 3px solid rgb(44, 43, 43);  
+}
+/*scrollbar */
+
