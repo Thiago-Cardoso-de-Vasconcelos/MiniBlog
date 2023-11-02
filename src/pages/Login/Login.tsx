@@ -1,16 +1,18 @@
-import styles from "./Login.module.css";
 import React from "react";
+import styles from "./Login.module.css";
+
 
 import { useEffect, useState } from "react";
-
+import { useAuthentication } from "../../hooks/useAuthentication";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  const { login, error: authError, loading } = useAuthentication();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     setError("");
@@ -20,8 +22,17 @@ const Login = () => {
       password,
     };
 
-    console.log(user);
+    const res = await login(user);
+
+    console.log(res);
   };
+
+  useEffect(() => {
+    console.log(authError);
+    if (authError) {
+      setError(authError);
+    }
+  }, [authError]);
 
   return (
     <div className={styles.login}>
@@ -50,7 +61,12 @@ const Login = () => {
             value={password}
           />
         </label>
-        <button className="btn">Entrar</button>    
+        {!loading && <button className="btn">Entrar</button>}
+        {loading && (
+          <button className="btn" disabled>
+            Aguarde...
+          </button>
+        )}
         {error && <p className="error">{error}</p>}
       </form>
     </div>
