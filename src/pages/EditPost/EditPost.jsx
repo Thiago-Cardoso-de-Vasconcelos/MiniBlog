@@ -1,7 +1,7 @@
 import styles from "./EditPost.module.css";
 
 import { useEffect, useState } from "react";
-import { useInsertDocument } from "../../hooks/useInsertDocuments";
+import { useUpdateDocument } from "../../hooks/useUpdateDocument";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuthValue } from "../../context/AuthContext";
 import { useFetchDocument } from "../../hooks/useFetchDocument";
@@ -31,7 +31,7 @@ const EditPost = () => {
 
   const navigate = useNavigate();
 
-  const { insertDocument, response } = useInsertDocument("posts");
+  const { updateDocument, response } = useUpdateDocument("posts");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -65,24 +65,28 @@ const EditPost = () => {
 
     if (formError) return;
 
-    insertDocument({
+    const data = {
       title,
       image,
       body,
       tags: tagsArray,
       uid: user.uid,
       createdBy: user.displayName,
-    });
+    };
+
+    updateDocument(id, data);
 
     // redirect to home page
-    navigate("/");
+    navigate("/dashboard");
   };
 
   return (
     <div className={styles.edit_post}>
       {post && (
         <>
-          <h2>Editando Post: <br/> {post.title}</h2>
+          <h2>
+            Editando Post: <br /> {post.title}
+          </h2>
           <p>Altere os dados do Post!</p>
           <form onSubmit={handleSubmit}>
             <label>
@@ -107,8 +111,12 @@ const EditPost = () => {
                 value={image}
               />
             </label>
-            <p className={styles.preview_title} >Preview da Imagem:</p>
-            <img className={styles.image_preview} src={post.image} alt={post.title}/>
+            <p className={styles.preview_title}>Preview da Imagem:</p>
+            <img
+              className={styles.image_preview}
+              src={post.image}
+              alt={post.title}
+            />
             <label>
               <span>Conteúdo:</span>
               <textarea
